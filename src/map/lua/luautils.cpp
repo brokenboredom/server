@@ -341,7 +341,7 @@ namespace luautils
 
         moduleutils::LoadLuaModules();
 
-        filewatcher = std::make_unique<Filewatcher>(std::vector<std::string>{ "scripts", "modules", "settings", "mixins" });
+        filewatcher = std::make_unique<Filewatcher>(std::vector<std::string>{ "scripts", "modules", "settings" });
 
         TracyReportLuaMemory(lua.lua_state());
 
