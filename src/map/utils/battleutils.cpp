@@ -677,6 +677,7 @@ namespace battleutils
 
         int32 damage = Action->spikesParam;
 
+
         // int16 intStat = PDefender->INT();
         // int16 mattStat = PDefender->getMod(Mod::MATT);
 
@@ -1600,7 +1601,7 @@ namespace battleutils
     uint8 GetRangedHitRate(CBattleEntity* PAttacker, CBattleEntity* PDefender, bool isBarrage, int8 accBonus)
     {
         int acc     = 0;
-        int hitrate = 75;
+        int hitrate = 60;
 
         if (PAttacker->objtype == TYPE_PC)
         {
@@ -1646,7 +1647,7 @@ namespace battleutils
         acc += accBonus;
 
         int eva = PDefender->EVA();
-        hitrate = hitrate + (acc - eva) / 2 + (PAttacker->GetMLevel() - PDefender->GetMLevel()) * 2;
+        hitrate = hitrate + (acc - eva) / 2 + (PAttacker->GetMLevel() - PDefender->GetMLevel()) * 2 * map_config.mob_level_correction;
 
         uint8 finalhitrate = std::clamp(hitrate, 20, 95);
         return finalhitrate;
@@ -1704,7 +1705,7 @@ namespace battleutils
         // level correct (0.025 not 0.05 like for melee)
         if (PDefender->GetMLevel() > PAttacker->GetMLevel())
         {
-            ratio -= 0.025f * (PDefender->GetMLevel() - PAttacker->GetMLevel());
+            ratio -= 0.025f * (PDefender->GetMLevel() - PAttacker->GetMLevel()) * map_config.mob_level_correction;
         }
 
         // calculate min/max PDIF
@@ -2209,6 +2210,7 @@ namespace battleutils
 
             damage = HandleStoneskin(PDefender, damage);
             HandleAfflatusMiseryDamage(PDefender, damage);
+            HandleScarletDeliriumDamage(PDefender, damage);
         }
         damage = std::clamp(damage, -99999, 99999);
 
@@ -2379,6 +2381,7 @@ namespace battleutils
         }
 
         HandleAfflatusMiseryDamage(PDefender, damage);
+        HandleScarletDeliriumDamage(PDefender, damage);
         damage = std::clamp(damage, -99999, 99999);
 
         int32 corrected = PDefender->takeDamage(damage, PAttacker, attackType, damageType);
@@ -2566,7 +2569,7 @@ namespace battleutils
     uint8 GetHitRateEx(CBattleEntity* PAttacker, CBattleEntity* PDefender, uint8 attackNumber,
                        int8 offsetAccuracy) // subWeaponAttack is for calculating acc of dual wielded sub weapon
     {
-        int32 hitrate = 75;
+        int32 hitrate = 60;
 
         if (PAttacker->objtype == TYPE_PC &&
             ((PAttacker->StatusEffectContainer->HasStatusEffect(EFFECT_SNEAK_ATTACK) &&
@@ -2660,7 +2663,7 @@ namespace battleutils
                 else
                 {
                     // Everything else has no known caps, though it's likely 38 like avatars
-                    hitrate += static_cast<int16>(dLvl * 2);
+                    hitrate += static_cast<int16>(dLvl * 2 * map_config.mob_level_correction);
                 }
             }
 
@@ -2733,6 +2736,20 @@ namespace battleutils
             if (taChar != nullptr)
             {
                 critHitRate = 100;
+            }
+        }
+        else if (PAttacker->objtype == TYPE_PC && PAttacker->StatusEffectContainer->HasStatusEffect(EFFECT_CLIMACTIC_FLOURISH) &&
+                 (!ignoreSneakTrickAttack))
+        {
+            critHitRate = 100;
+            uint16 power = PAttacker->StatusEffectContainer->GetStatusEffect(EFFECT_CLIMACTIC_FLOURISH)->GetPower();
+            if ( power >= 0 )
+            {
+                PAttacker->StatusEffectContainer->GetStatusEffect(EFFECT_CLIMACTIC_FLOURISH)->SetPower(power-1);
+            }
+            else
+            {
+                PAttacker->StatusEffectContainer->DelStatusEffect(EFFECT_CLIMACTIC_FLOURISH);
             }
         }
         else
@@ -2937,7 +2954,7 @@ namespace battleutils
         uint8 attackerLvl = PAttacker->GetMLevel();
         uint8 defenderLvl = PDefender->GetMLevel();
         uint8 dLvl        = std::abs(attackerLvl - defenderLvl);
-        float correction  = static_cast<float>(dLvl) * 0.05f;
+        float correction  = static_cast<float>(dLvl) * 0.05f * map_config.mob_level_correction;
 
         // Assuming the cap for mobs is the same as Avatars
         // Cap at 38 level diff so 38*0.05 = 1.9
@@ -4055,6 +4072,7 @@ namespace battleutils
             damage = HandleOneForAll(PDefender, damage);
             damage = HandleStoneskin(PDefender, damage);
             HandleAfflatusMiseryDamage(PDefender, damage);
+            HandleScarletDeliriumDamage(PDefender, damage);
         }
         damage = std::clamp(damage, -99999, 99999);
 
@@ -4515,6 +4533,15 @@ namespace battleutils
             m_PChar->StatusEffectContainer->DelStatusEffect(EFFECT_CONSUME_MANA);
         }
         return damage;
+    }
+
+    void doSoulEnslavementEffect(CCharEntity* m_PChar, uint32 damage)
+    {
+        if (m_PChar->StatusEffectContainer->HasStatusEffect(EFFECT_SOUL_ENSLAVEMENT))
+        {
+            m_PChar->health.tp += damage / 10;
+        }
+        return;
     }
 
     /************************************************************************
@@ -5483,6 +5510,17 @@ namespace battleutils
         {
             PDefender->setModifier(Mod::AFFLATUS_MISERY, damage);
             // ShowDebug("Misery power: %d", damage);
+        }
+    }
+
+    void HandleScarletDeliriumDamage(CBattleEntity* PDefender, int32 damage)
+    {
+        if (PDefender->StatusEffectContainer->HasStatusEffect(EFFECT_SCARLET_DELIRIUM) && damage > 0)
+        {
+            uint16 hppDmg = (uint16)(damage * 100 / PDefender->health.maxhp);
+            uint32 duration = 90;
+            PDefender->StatusEffectContainer->AddStatusEffect(new CStatusEffect(EFFECT_SCARLET_DELIRIUM_1, EFFECT_SCARLET_DELIRIUM_1, hppDmg, 3, duration), true);
+            PDefender->StatusEffectContainer->DelStatusEffectSilent(EFFECT_SCARLET_DELIRIUM);
         }
     }
 

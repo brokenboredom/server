@@ -146,20 +146,34 @@ ability_object.onUseAbility = function(player, target, ability, action)
             end
         end
 
+        local finishingMoves = 1 + player:getMod(xi.mod.STEP_FINISH)
+		if mjob == xi.job.DNC then
+			finishingMoves = finishingMoves + 1
+		end
+		if player:hasStatusEffect(xi.effect.PRESTO) then
+			finishingMoves = finishingMoves + 1
+		end
+		
         if (player:hasStatusEffect(xi.effect.FINISHING_MOVE_1)) then
             player:delStatusEffectSilent(xi.effect.FINISHING_MOVE_1)
-            player:addStatusEffect(xi.effect.FINISHING_MOVE_1+daze, 1, 0, 7200)
+			if (finishingMoves > 4) then
+                finishingMoves = 4
+			end
+            player:addStatusEffect(xi.effect.FINISHING_MOVE_1+finishingMoves, 1, 0, 7200)
 
         elseif (player:hasStatusEffect(xi.effect.FINISHING_MOVE_2)) then
             player:delStatusEffectSilent(xi.effect.FINISHING_MOVE_2)
-            player:addStatusEffect(xi.effect.FINISHING_MOVE_2+daze, 1, 0, 7200)
+			if (finishingMoves > 3) then
+                finishingMoves = 3
+			end
+            player:addStatusEffect(xi.effect.FINISHING_MOVE_2+finishingMoves, 1, 0, 7200)
 
         elseif (player:hasStatusEffect(xi.effect.FINISHING_MOVE_3)) then
             player:delStatusEffectSilent(xi.effect.FINISHING_MOVE_3)
-            if (daze > 2) then
-                daze = 2
+            if (finishingMoves > 2) then
+                finishingMoves = 2
             end
-            player:addStatusEffect(xi.effect.FINISHING_MOVE_3+daze, 1, 0, 7200)
+            player:addStatusEffect(xi.effect.FINISHING_MOVE_3+finishingMoves, 1, 0, 7200)
 
         elseif (player:hasStatusEffect(xi.effect.FINISHING_MOVE_4)) then
             player:delStatusEffectSilent(xi.effect.FINISHING_MOVE_4)
@@ -167,7 +181,7 @@ ability_object.onUseAbility = function(player, target, ability, action)
         elseif (player:hasStatusEffect(xi.effect.FINISHING_MOVE_5)) then
 
         else
-            player:addStatusEffect(xi.effect.FINISHING_MOVE_1 - 1 + daze, 1, 0, 7200)
+            player:addStatusEffect(xi.effect.FINISHING_MOVE_1 - 1 + finishingMoves, 1, 0, 7200)
         end
 
     else

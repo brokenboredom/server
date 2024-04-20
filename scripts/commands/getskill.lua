@@ -48,8 +48,8 @@ function onTrigger(player, skillName, target)
             return
         end
     end
-
+	local withMod = targ:getMod(xi.mod.LEATHER)
     -- Trying to break this wide line in any other more reasonable way results in lua throwing errors.. Parsing bug.
     player:PrintToPlayer(string.format("%s's current skillID '%s' Skill: %s (real value: %s)",
-    targ:getName(), skillName, (targ:getCharSkillLevel(skillID)/10) .. ".x", targ:getCharSkillLevel(skillID)))
+    targ:getName(), skillName, (targ:getCharSkillLevel(skillID)/10)+withMod .. ".x", targ:getCharSkillLevel(skillID)))
 end

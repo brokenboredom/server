@@ -20,7 +20,7 @@ item_object.onItemCheck = function(target)
 end
 
 item_object.onItemUse = function(target)
-    target:addStatusEffect(xi.effect.DEDICATION, 100, 0, 43200, 0, 9000)
+    target:addStatusEffect(xi.effect.DEDICATION, 45, 0, 3600, 0)
 end
 
 return item_object

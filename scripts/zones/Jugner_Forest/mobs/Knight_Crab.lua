@@ -21,6 +21,14 @@ entity.onMobSpawn = function(mob)
 end
 
 entity.onMobDeath = function(mob, player, isKiller)
+    local chance = math.random(0,99)
+    if chance <= 5 then
+        SpawnMob(17203685) --Krabkatoa
+        local pos = mob:getPos()
+        local targ = GetMobByID(17203685)
+        targ:setPos(pos.x, pos.y, pos.z, pos.r)
+
+    end
 end
 
 entity.onMobDespawn = function(mob)

@@ -31,6 +31,9 @@ weaponskill_object.onUseWeaponSkill = function(player, target, wsID, tp, primary
         params.ftp100 = 1.125 params.ftp200 = 2.625 params.ftp300 = 4.125
         params.str_wsc = 0.4 params.mnd_wsc = 0.4
     end
+    if USE_ELEMENTAL_WEAPON_SKILL_CHANGES then
+		params.ftp100 = ELEMENTAL_FTP100 params.ftp200 = ELEMENTAL_FTP200 params.ftp300 = ELEMENTAL_FTP300
+	end
 
     local damage, criticalHit, tpHits, extraHits = doMagicWeaponskill(player, target, wsID, params, tp, action, primary)
     return tpHits, extraHits, criticalHit, damage

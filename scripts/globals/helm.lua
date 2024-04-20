@@ -1017,15 +1017,15 @@ local helmInfo =
                 {
                     {2010, 2417}, -- Aht Urhgan Brass
                     {1000,  928}, -- Bomb Ash
-                    {1720,  768}, -- Flint Stone
+                    {1470,  768}, -- Flint Stone
                     { 290,  737}, -- Gold Ore
-                    {1440, 1155}, -- Iron Sand
+                    {1040, 1155}, -- Iron Sand
                     {  50, 2228}, -- Luminium Ore
                     { 430, 1631}, -- Moblin Armor
                     { 430, 1625}, -- Moblin Helm
                     { 480, 1632}, -- Moblin Mail
                     { 290, 1638}, -- Moblin Mask
-                    { 100,  739}, -- Orichalcum Ore
+                    { 500,  739}, -- Orichalcum Ore
                     {1200, 1108}, -- Pinch of Sulfur
                     { 480, 2160}, -- Troll Pauldron
                     { 330, 2161}, -- Troll Vambrace
@@ -1386,11 +1386,14 @@ local function doMove(npc, x, y, z)
 end
 
 local function movePoint(npc, zoneId, info)
-    local points = info.zone[zoneId].points
-    local point = points[math.random(#points)]
-    npc:hideNPC(120)
-    npc:queue(3000, doMove(npc, unpack(point)))
-end
+	if math.random() <= 0.5 then
+		local points = info.zone[zoneId].points
+		local point = points[math.random(#points)]
+		npc:hideNPC(120)
+		npc:queue(3000, doMove(npc, unpack(point)))
+	end
+end	
+
 
 -----------------------------------
 -- public functions
@@ -1430,7 +1433,7 @@ xi.helm.onTrade = function(player, npc, trade, helmType, csid, func)
         if item ~= 0 and full == 0 then
             player:addItem(item)
 
-            local uses = (npc:getLocalVar("uses") - 1) % 4
+            local uses = (npc:getLocalVar("uses") - 1) % 11
             npc:setLocalVar("uses", uses)
             if uses == 0 then
                 movePoint(npc, zoneId, info)

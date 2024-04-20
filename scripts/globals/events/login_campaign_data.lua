@@ -39,26 +39,26 @@ local prizes =
         ["price"] = 100,
         ["items"] =
         {
-            8734,  -- Mog Kupon I-S1
-            8966,  -- Eudaemon Blade
-            8967,  -- Eudaemon Cape
-            8968,  -- Eudaemon Ring
-            8969,  -- Eudaemon Sash
-            8970,  -- Eudaemon Shield
-            17006, -- Drill Calamary
-            17007, -- Dwarf Pugil
-            6413,  -- Astral Cube
+            --8734,  -- Mog Kupon I-S1
+            --8966,  -- Eudaemon Blade
+            --8967,  -- Eudaemon Cape
+            --8968,  -- Eudaemon Ring
+            --8969,  -- Eudaemon Sash
+            --8970,  -- Eudaemon Shield
+            --17006, -- Drill Calamary
+            --17007, -- Dwarf Pugil
+            --6413,  -- Astral Cube
             -- 9891,  -- Zinnia Orb
-            -- 10112, -- Cipher: Zeid
-            -- 10113, -- Cipher: Lion
+            10112, -- Cipher: Zeid
+            10113, -- Cipher: Lion
             10118, -- Cipher: Naja
             10120, -- Cipher: Lehko
-            -- 10124, -- Cipher: Luzaf
-            -- 10125, -- Cipher: Najelith
-            -- 10129, -- Cipher: Domina
+            10124, -- Cipher: Luzaf
+            10125, -- Cipher: Najelith
+            10129, -- Cipher: Domina
             -- 10134, -- Cipher: S. Sibyl
             -- 10142, -- Cipher: Karaha
-            -- 10149, -- Cipher: Areuhat
+            10149, -- Cipher: Areuhat
         },
     },
 
@@ -67,21 +67,13 @@ local prizes =
         ["price"] = 100,
         ["items"] =
         {
-            -- 10136, -- Cipher: Uka
-            -- 10141, -- Cipher: Kuyin
-            -- 10144, -- Cipher: Abenzio
-            -- 10145, -- Cipher: Rughadjeen
-            -- 10150, -- Cipher: Lhe
-            -- 10151, -- Cipher: Mayakov
-            -- 10155, -- Cipher: Brygid
-            -- 10156, -- Cipher: Mildaurion
-            -- 10161, -- Cipher: Rongelouts
-            -- 10166, -- Cipher: Robel-Akbel
-            -- 10178, -- Cipher: Ullegore
-            -- 10179, -- Cipher: Teodor
-            -- 10183, -- Cipher: Darrcuiln
+            
             20713, -- Excalipoor
             6008,  -- Copse Candy
+            3339, -- Honey Wine
+            3341, -- Beastly Shank
+            3343, -- Blue Pondweed
+            --Forgotten
         },
     },
 
@@ -90,10 +82,13 @@ local prizes =
         ["price"] = 300,
         ["items"] =
         {
-            -- 10187, -- Cipher: Shantotto II
+            
             10069, -- ♪Goobbue
             10051, -- ♪Crab
             10058, -- ♪Beetle
+            3340, -- Sweet Tea
+            3342, -- Savory Shank
+            3344, -- Red Pondweed
             -- TODO: The other mounts
             10384, -- Cumulus Masque
             20666, -- Blizzard Brand
@@ -121,6 +116,22 @@ local prizes =
         {
             -- TODO: Special month-to-month things
             10073, -- ♪Dhalmel
+            26165, -- Facility Ring
+            26164, -- Caliber Ring
+            10136, -- Cipher: Uka
+            10141, -- Cipher: Kuyin
+            10144, -- Cipher: Abenzio
+            10145, -- Cipher: Rughadjeen
+            10150, -- Cipher: Lhe
+            10151, -- Cipher: Mayakov
+            10155, -- Cipher: Brygid
+            10156, -- Cipher: Mildaurion
+            10161, -- Cipher: Rongelouts
+            10166, -- Cipher: Robel-Akbel
+            10178, -- Cipher: Ullegore
+            10179, -- Cipher: Teodor
+            10183, -- Cipher: Darrcuiln
+
         },
 
     },
@@ -130,15 +141,13 @@ local prizes =
         ["price"] = 750,
         ["items"] =
         {
-            3885, -- Melodious Plans
-            3886, -- Timbre Case Kit
-            3887, -- Musichinery Kit
+            --3885, -- Melodious Plans
+            --3886, -- Timbre Case Kit
+            --3887, -- Musichinery Kit
             -- 9079, -- Kitchen Brick
             -- 9080, -- Kitchen Stove
             -- 9081, -- Kitchen Plate
-            3339, -- Honey Wine
-            3341, -- Beastly Shank
-            3343, -- Blue Pondweed
+            
             -- 1873, -- Brigand's Chart
             -- 1874, -- Pirate's Chart
             -- 6381, -- Fisherman's Feast
@@ -147,6 +156,8 @@ local prizes =
             -- 4071, -- Copy Of Rem's Tale, Chapter 8
             -- 4072, -- Copy Of Rem's Tale, Chapter 9
             -- 4073, -- Copy Of Rem's Tale, Chapter 10
+            --10187, -- Cipher: Shantotto II
+            10181, -- Cipher: King of Hearts
         },
     },
 
@@ -156,11 +167,13 @@ local prizes =
         ["items"] =
         {
             -- 6499,  -- Patio Design Plans
-            26165, -- Facility Ring
-            26164, -- Caliber Ring
+            
             -- 6486,  -- Frayed Sack (Pel)
             -- 6487,  -- Frayed Sack (Fer)
             -- 6488,  -- Frayed Sack (Tau)
+            --15840,    -- kupofried ring
+            --10123,    -- Cipher: sakura
+            10162, -- Cipher: Kupofried
         },
     },
 
@@ -169,14 +182,16 @@ local prizes =
         ["price"] = 1500,
         ["items"] =
         {
-            3340, -- Sweet Tea
-            3342, -- Savory Shank
-            3344, -- Red Pondweed
-            -- 8720, -- Maliya. Coral Orb
-            -- 8722, -- Hepatizon Ingot
-            -- 8724, -- Beryllium Ingot
-            -- 8726, -- Exalted Lumber
-            -- 8728, -- Sif's Macrame
+            
+             --8720, -- Maliya. Coral Orb
+             --8722, -- Hepatizon Ingot
+             --8724, -- Beryllium Ingot
+             --8726, -- Exalted Lumber
+             --8728, -- Sif's Macrame
+             1451,  -- Stripeshell
+             1454,  -- Goldpiece
+             1457,  -- 10,000 Byne
+
         },
     },
 }

@@ -15,7 +15,9 @@ ability_object.onAbilityCheck = function(player, target, ability)
 end
 
 ability_object.onUseAbility = function(player, target, ability)
-    player:addStatusEffect(xi.effect.CASCADE, 4, 0, 60)
+    local tpBonus = player:getTP()/10
+
+    player:addStatusEffect(xi.effect.CASCADE, tpBonus, 3, 60)
 end
 
 return ability_object

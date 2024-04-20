@@ -643,6 +643,7 @@ public:
     int32 rangedDmgTaken(double damage, sol::variadic_args va);
     int32 breathDmgTaken(double damage);
     void  handleAfflatusMiseryDamage(double damage);
+    void  handleScarletDeliriumDamage(double damage);
 
     bool   isWeaponTwoHanded();
     int    getMeleeHitDamage(CLuaBaseEntity* PLuaBaseEntity, sol::object const& arg1); // gets the damage of a single hit vs the specified mob

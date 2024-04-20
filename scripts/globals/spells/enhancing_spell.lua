@@ -477,7 +477,8 @@ xi.spells.enhancing.useEnhancingSpell = function(caster, target, spell)
     local basePower  = xi.spells.enhancing.calculateEnhancingBasePower(caster, target, spell, spellId, spellEffect)
     local finalPower = xi.spells.enhancing.calculateEnhancingFinalPower(caster, target, spell, basePower, spellGroup, tier, spellEffect)
     local duration   = xi.spells.enhancing.calculateEnhancingDuration(caster, target, spell, spellId, spellGroup, spellEffect)
-
+    --Debug
+    --printf("Spell: %s, basePower: %s, finalPower: %s, duration: %s", spellId, basePower, finalPower, duration)
     ------------------------------
     -- Handle Status Effects, Embolden buffs can only be applied by player, so do not remove embolden..
     ------------------------------

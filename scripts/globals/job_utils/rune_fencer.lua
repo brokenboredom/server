@@ -601,6 +601,7 @@ xi.job_utils.rune_fencer.useSwipeLunge = function(player, target, ability, actio
                 target:takeSwipeLungeDamage(player, damage, xi.attackType.MAGICAL, xi.damageType.ELEMENTAL + element)
                 -- Handle Afflatus Misery.
                 target:handleAfflatusMiseryDamage(damage)
+                target:handleScarletDeliriumDamage(damage)
                 -- Handle Enmity.
                 target:updateEnmityFromDamage(player, damage)
             end

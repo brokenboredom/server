@@ -24,7 +24,7 @@ spell_object.onMobSpawn = function(mob)
     -- Has Regain (50/tick) and uses Nott when MP falls below 66%.
     -- cure IV cures 456 HP @99
 
-    mob:addMod(xi.mod.GEOMANCY_SKILL, 8 * mob:getMainLvl() + 1)
+    mob:addMod(xi.mod.GEOMANCY_SKILL, 9 * mob:getMainLvl() + 1)
     mob:addMod(xi.mod.INDI_DURATION, 180)
     mob:addMod(xi.mod.REGAIN, 50)
 
@@ -43,18 +43,20 @@ spell_object.onMobSpawn = function(mob)
     mob:addSimpleGambit(ai.t.PARTY, ai.c.STATUS_FLAG, xi.effectFlag.ERASABLE, ai.r.MA, ai.s.SPECIFIC, xi.magic.spell.ERASE)
     mob:addSimpleGambit(ai.t.SELF, ai.c.STATUS_FLAG, xi.effectFlag.ERASABLE, ai.r.MA, ai.s.SPECIFIC, xi.magic.spell.ERASE)
 
-    if mob:getMainLvl() >= 20 then
+    if mob:getMainLvl() >= 1 then
         mob:addSimpleGambit(ai.t.SELF, ai.c.NOT_STATUS, xi.effect.COLURE_ACTIVE, ai.r.MA, ai.s.BEST_INDI, xi.magic.spellFamily.NONE)
+		mob:addSimpleGambit(ai.t.SELF, ai.c.NOT_STATUS, xi.effect.COLURE_ACTIVE, ai.r.MA, ai.s.SPECIFIC, xi.magic.spell.INDI_POISON, 60)
     end
 
-    if mob:getMainLvl() >= 93 and mJob ~= xi.job.GEO then
+    if mob:getMainLvl() >= 75 and mJob ~= xi.job.GEO then
         mob:addSimpleGambit(ai.t.SELF, ai.c.NOT_STATUS, xi.effect.ENTRUST, ai.r.JA, ai.s.SPECIFIC, xi.jobAbility.ENTRUST)
         mob:addSimpleGambit(ai.t.SELF, ai.c.STATUS, xi.effect.ENTRUST, ai.r.MA, ai.s.ENTRUSTED, xi.magic.spellFamily.INDI_BUFF)
     end
 
     mob:addSimpleGambit(ai.t.MASTER, ai.c.NOT_STATUS, xi.effect.HASTE, ai.r.MA, ai.s.SPECIFIC, xi.magic.spell.HASTE)
     mob:addSimpleGambit(ai.t.MELEE, ai.c.NOT_STATUS, xi.effect.HASTE, ai.r.MA, ai.s.SPECIFIC, xi.magic.spell.HASTE)
-
+	
+	mob:setTrustTPSkillSettings(ai.tp.ASAP, ai.s.HIGHEST)
     mob:SetAutoAttackEnabled(false)
 end
 

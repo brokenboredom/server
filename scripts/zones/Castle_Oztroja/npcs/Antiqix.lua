@@ -61,6 +61,8 @@ entity.onTrade = function(player, npc, trade)
         -- currency exchanges
         elseif (count == xi.settings.CURRENCY_EXCHANGE_RATE and trade:hasItemQty(currency[1], xi.settings.CURRENCY_EXCHANGE_RATE)) then
             player:startEvent(55, xi.settings.CURRENCY_EXCHANGE_RATE)
+		elseif (count == xi.settings.CURRENCY_EXCHANGE_RATE * 7 and trade:hasItemQty(currency[1], xi.settings.CURRENCY_EXCHANGE_RATE*7)) then
+			player:startEvent(555, xi.settings.CURRENCY_EXCHANGE_RATE)
         elseif (count == xi.settings.CURRENCY_EXCHANGE_RATE and trade:hasItemQty(currency[2], xi.settings.CURRENCY_EXCHANGE_RATE)) then
             player:startEvent(56, xi.settings.CURRENCY_EXCHANGE_RATE)
         elseif (count == 1 and trade:hasItemQty(currency[3], 1)) then
@@ -153,6 +155,15 @@ entity.onEventFinish = function(player, csid, option)
         else
             player:tradeComplete()
             player:addItem(currency[2])
+            player:messageSpecial(ID.text.ITEM_OBTAINED, currency[2])
+        end
+	-- singles to hundos
+    elseif (csid == 555) then
+        if (player:getFreeSlotsCount() == 0) then
+            player:messageSpecial(ID.text.ITEM_CANNOT_BE_OBTAINED, currency[2])
+        else
+            player:tradeComplete()
+            player:addItem(currency[2]*7)
             player:messageSpecial(ID.text.ITEM_OBTAINED, currency[2])
         end
 

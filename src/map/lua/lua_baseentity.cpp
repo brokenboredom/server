@@ -11314,6 +11314,20 @@ void CLuaBaseEntity::handleAfflatusMiseryDamage(double damage)
 }
 
 /************************************************************************
+ *  Function: handleAfflatusMiseryDamage()
+ *  Purpose : Passes an argument to the HandleAfflatusMiseryDamage member of battleutils
+ *  Example : target:handleAfflatusMiseryDamage(dmg)
+ *  Notes   :
+ ************************************************************************/
+
+void CLuaBaseEntity::handleScarletDeliriumDamage(double damage)
+{
+    XI_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
+
+    battleutils::HandleScarletDeliriumDamage(static_cast<CBattleEntity*>(m_PBaseEntity), static_cast<int32>(damage));
+}
+
+/************************************************************************
  *  Function: isWeaponTwoHanded()
  *  Purpose : Returns true if the Weapon in the Main Slot is two-handed
  *  Example : if player:isWeaponTwoHanded() then
@@ -12895,7 +12909,15 @@ void CLuaBaseEntity::setRespawnTime(uint32 seconds)
 
     auto* PMob = static_cast<CMobEntity*>(m_PBaseEntity);
 
-    PMob->m_RespawnTime = seconds * 1000;
+    if (seconds >= 3600 )
+    {
+        PMob->m_RespawnTime = seconds * 1000 / 10;
+    }
+    else
+    {
+        PMob->m_RespawnTime = seconds * 1000;
+    }
+
     if (PMob->PAI->IsCurrentState<CRespawnState>())
     {
         PMob->PAI->GetCurrentState()->ResetEntryTime();
@@ -14633,6 +14655,7 @@ void CLuaBaseEntity::Register()
     SOL_REGISTER("rangedDmgTaken", CLuaBaseEntity::rangedDmgTaken);
     SOL_REGISTER("breathDmgTaken", CLuaBaseEntity::breathDmgTaken);
     SOL_REGISTER("handleAfflatusMiseryDamage", CLuaBaseEntity::handleAfflatusMiseryDamage);
+    SOL_REGISTER("handleScarletDeliriumDamage", CLuaBaseEntity::handleScarletDeliriumDamage);
 
     SOL_REGISTER("isWeaponTwoHanded", CLuaBaseEntity::isWeaponTwoHanded);
     SOL_REGISTER("getMeleeHitDamage", CLuaBaseEntity::getMeleeHitDamage);

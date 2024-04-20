@@ -22,7 +22,7 @@ end
 
 ability_object.onUseAbility = function(player, target, ability, action)
     if (not target:hasStatusEffect(xi.effect.CHAINBOUND, 0) and not target:hasStatusEffect(xi.effect.SKILLCHAIN, 0)) then
-        target:addStatusEffectEx(xi.effect.CHAINBOUND, 0, 2, 0, 5, 0, 1)
+        target:addStatusEffectEx(xi.effect.CHAINBOUND, 0, 2, 0, 10, 0, 1)
     else
         ability:setMsg(xi.msg.basic.JA_NO_EFFECT)
     end

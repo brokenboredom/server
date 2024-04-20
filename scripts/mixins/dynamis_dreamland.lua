@@ -43,11 +43,11 @@ g_mixins.dynamis_dreamland = function(dynamisDreamlandMob)
     -- "Without a proc, the coin drop rate is very low (~10%)"
     local thCurrency =
     {
-        [0] = {single = 100, hundo =  5},
-        [1] = {single = 115, hundo = 10},
-        [2] = {single = 145, hundo = 20},
-        [3] = {single = 190, hundo = 35},
-        [4] = {single = 250, hundo = 50},
+        [0] = {single = 500, hundo =  50},
+        [1] = {single = 600, hundo = 50},
+        [2] = {single = 700, hundo = 50},
+        [3] = {single = 800, hundo = 50},
+        [4] = {single = 900, hundo = 50},
     }
 
     dynamisDreamlandMob:addListener("MAGIC_TAKE", "DYNAMIS_MAGIC_PROC_CHECK", function(target, caster, spell)
@@ -121,11 +121,11 @@ g_mixins.dynamis_dreamland = function(dynamisDreamlandMob)
                 singleChance = math.floor(singleChance * 1.5)
             end
 
-            if mob:getLocalVar("dynamis_proc") >= 4 then killer:addTreasure(currency + 1, mob) end           -- white (special) adds 100% hundo slot
+             killer:addTreasure(currency + 1, mob, hundoChance)            -- white (special) adds 100% hundo slot
             if mob:isNM() then killer:addTreasure(currency + 1, mob, hundoChance) end                        -- base hundo slot
-            if mob:getLocalVar("dynamis_proc") >= 3 then killer:addTreasure(currency, mob) end               -- red (high) adds 100% single slot
-            if mob:getLocalVar("dynamis_proc") >= 2 then killer:addTreasure(currency, mob, singleChance) end -- yellow (medium) adds single slot
-            if mob:getLocalVar("dynamis_proc") >= 1 then killer:addTreasure(currency, mob, singleChance) end -- blue (low) adds single slot
+             killer:addTreasure(currency, mob)                -- red (high) adds 100% single slot
+             killer:addTreasure(currency, mob, singleChance)  -- yellow (medium) adds single slot
+             killer:addTreasure(currency, mob, singleChance)  -- blue (low) adds single slot
             killer:addTreasure(currency, mob, singleChance)                                                  -- base single slot
         end
     end)

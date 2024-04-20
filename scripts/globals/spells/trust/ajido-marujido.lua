@@ -25,6 +25,8 @@ spell_object.onMobSpawn = function(mob)
         [xi.magic.spell.SEMIH_LAFIHNA] = xi.trust.message_offset.TEAMWORK_5,
     })
 
+	mob:addSimpleGambit(ai.t.TARGET, ai.c.STATUS_FLAG, xi.effectFlag.DISPELABLE, ai.r.MA, ai.s.SPECIFIC, xi.magic.spell.DISPEL, 10)
+	
     mob:addSimpleGambit(ai.t.TARGET, ai.c.MB_AVAILABLE, 0,
                         ai.r.MA, ai.s.MB_ELEMENT, xi.magic.spellFamily.NONE)
 
@@ -32,10 +34,11 @@ spell_object.onMobSpawn = function(mob)
                         ai.r.MA, ai.s.HIGHEST, xi.magic.spellFamily.CURE)
 
     mob:addSimpleGambit(ai.t.TARGET, ai.c.NOT_STATUS, xi.effect.SLOW,
-                        ai.r.MA, ai.s.HIGHEST, xi.magic.spellFamily.SLOW, 60)
+                        ai.r.MA, ai.s.HIGHEST, xi.magic.spellFamily.SLOW, 30)
+	mob:addSimpleGambit(ai.t.TARGET, ai.c.NOT_STATUS, xi.effect.PARALYSIS, ai.r.MA, ai.s.HIGHEST, xi.magic.spellFamily.PARALYZE, 30)
 
     mob:addSimpleGambit(ai.t.TARGET, ai.c.NOT_SC_AVAILABLE, 0,
-                        ai.r.MA, ai.s.HIGHEST, xi.magic.spellFamily.NONE, 60)
+                        ai.r.MA, ai.s.BEST_AGAINST_TARGET, xi.magic.spellFamily.NONE, 15)
 end
 
 spell_object.onMobDespawn = function(mob)

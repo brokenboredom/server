@@ -1,3 +1,4 @@
+
 -----------------------------------
 -- func: mobhere <mobId>
 -- desc: Spawns a MOB and then moves it to the current position, if in same zone.

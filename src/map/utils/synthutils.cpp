@@ -1,4 +1,4 @@
-/*
+﻿/*
 ===========================================================================
 
   Copyright (c) 2010-2015 Darkstar Dev Teams
@@ -332,16 +332,16 @@ namespace synthutils
             switch (finalhqtier)
             {
                 case 4: // 1 in 2
-                    chance = 0.5;
+                    chance = -synthDiff * 0.01 + 0.20;
                     break;
                 case 3: // 1 in 4
-                    chance = 0.25;
+                    chance = -synthDiff * 0.01 + 0.15;
                     break;
                 case 2: // 1 in 20
-                    chance = 0.05;
+                    chance = -synthDiff * 0.01 + 0.10;
                     break;
                 case 1: // 1 in 100
-                    chance = 0.01;
+                    chance = -synthDiff * 0.01 + 0.05;
                     break;
                 default: // No chance
                     chance = 0;
@@ -368,7 +368,7 @@ namespace synthutils
                 }
                 else
                 {
-                    chance = std::clamp(chance, 0., 0.500);
+                    chance = std::clamp(chance, 0., 0.950);
                 }
             }
 
@@ -377,12 +377,12 @@ namespace synthutils
                 result = SYNTHESIS_HQ;
                 random = xirand::GetRandomNumber(1, 100);
 
-                if (random < 26) // 25% Chance after HQ to upgrade to HQ2
+                if (random < 51) // 25% Chance after HQ to upgrade to HQ2
                 {
                     result = SYNTHESIS_HQ2;
                     random = xirand::GetRandomNumber(1, 100);
 
-                    if (random < 26) // 25% Chance after HQ2 to upgrade to HQ3
+                    if (random < 51) // 25% Chance after HQ2 to upgrade to HQ3
                     {
                         result = SYNTHESIS_HQ3;
                     }

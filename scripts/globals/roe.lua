@@ -135,7 +135,8 @@ end
 -----------------------------------
 
 -- Schedule for Timed Records.
-local timedSchedule =
+math.randomseed( os.time() )
+--[[local timedSchedule =
 {
 -- 4-hour timeslots (6 per day) all days/times are in JST
 --    00-04  04-08  08-12  12-16  16-20  20-00
@@ -146,6 +147,18 @@ local timedSchedule =
     {  4018,  4013,  4020,  4009,  4015,  4011}, -- Thursdsay
     {  4019,  4008,  4021,  4010,  4016,  4012}, -- Friday
     {  4020,  4009,  4015,  4011,  4017,  4014}, -- Saturday
+}]]--
+local timedSchedule =
+{
+-- 4-hour timeslots (6 per day) all days/times are in JST
+--    00-04  04-08  08-12  12-16  16-20  20-00
+    {  math.random(4008,4021),  math.random(4008,4021),  math.random(4008,4021),  math.random(4008,4021),  math.random(4008,4021),  math.random(4008,4021)}, -- Sunday
+    {  math.random(4008,4021),  math.random(4008,4021),  math.random(4008,4021),  math.random(4008,4021),  math.random(4008,4021),  math.random(4008,4021)}, -- Monday
+    {  math.random(4008,4021),  math.random(4008,4021),  math.random(4008,4021),  math.random(4008,4021),  math.random(4008,4021),  math.random(4008,4021)}, -- Tuesday
+    {  math.random(4008,4021),  math.random(4008,4021),  math.random(4008,4021),  math.random(4008,4021),  math.random(4008,4021),  math.random(4008,4021)}, -- Wednesday
+    {  math.random(4008,4021),  math.random(4008,4021),  math.random(4008,4021),  math.random(4008,4021),  math.random(4008,4021),  math.random(4008,4021)}, -- Thursdsay
+    {  math.random(4008,4021),  math.random(4008,4021),  math.random(4008,4021),  math.random(4008,4021),  math.random(4008,4021),  math.random(4008,4021)}, -- Friday
+    {  math.random(4008,4021),  math.random(4008,4021),  math.random(4008,4021),  math.random(4008,4021),  math.random(4008,4021),  math.random(4008,4021)}, -- Saturday
 }
 -- Load timetable for timed records
 if xi.settings.ENABLE_ROE and xi.settings.ENABLE_ROE_TIMED > 0 then

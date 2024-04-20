@@ -42,8 +42,8 @@ spell_object.onMobSpawn = function(mob)
 
     mob:addSimpleGambit(ai.t.PARTY, ai.c.HPP_LT, 75, ai.r.MA, ai.s.HIGHEST, xi.magic.spellFamily.CURE)
 
-    -- Try and ranged attack every 60s
-    mob:addSimpleGambit(ai.t.TARGET, ai.c.ALWAYS, 0, ai.r.RATTACK, 0, 0, 60)
+    -- Ranged Attack as much as possible (limited by "weapon" delay)
+    mob:addSimpleGambit(ai.t.TARGET, ai.c.ALWAYS, 0, ai.r.RATTACK, 0, 0)
 
     mob:SetAutoAttackEnabled(false)
 end

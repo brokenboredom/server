@@ -268,7 +268,7 @@ xi.trust.canCast = function(caster, spell, not_allowed_trust_ids)
 
     -- Block summoning trusts if someone recently joined party (120s)
     local last_party_member_added_time = caster:getPartyLastMemberJoinedTime()
-    if os.time() - last_party_member_added_time < 120 then
+    if os.time() - last_party_member_added_time < 1 then
         caster:messageSystem(xi.msg.system.TRUST_DELAY_NEW_PARTY_MEMBER)
         return -1
     end

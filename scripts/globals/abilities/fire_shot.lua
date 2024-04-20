@@ -13,6 +13,9 @@ local ability_object = {}
 ability_object.onAbilityCheck = function(player, target, ability)
     --ranged weapon/ammo: You do not have an appropriate ranged weapon equipped.
     --no card: <name> cannot perform that action.
+    if player:getObjType() == xi.objType.TRUST then
+        return 0, 0
+    end
     if player:getWeaponSkillType(xi.slot.RANGED) ~= xi.skill.MARKSMANSHIP or player:getWeaponSkillType(xi.slot.AMMO) ~= xi.skill.MARKSMANSHIP then
         return 216, 0
     end
@@ -65,7 +68,9 @@ ability_object.onUseAbility = function(player, target, ability, action)
             newEffect:setStartTime(startTime)
         end
     end
-
+    if player:getObjType() == xi.objType.TRUST then
+        return dmg
+    end
     local _ = player:delItem(2176, 1) or player:delItem(2974, 1)
 
     target:updateClaim(player)

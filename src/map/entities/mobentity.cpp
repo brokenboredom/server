@@ -384,7 +384,13 @@ uint16 CMobEntity::TPUseChance()
         return 10000;
     }
 
-    return (uint16)getMobMod(MOBMOD_TP_USE_CHANCE);
+    if (GetHPP() <= 50 && health.tp >= 2000)
+    {
+        return 10000;
+    }
+
+    return 500; //5% chance every 400ms approx. 
+    //return (uint16)getMobMod(MOBMOD_TP_USE_CHANCE); //No mobs have this mob mod. ID: 20
 }
 
 void CMobEntity::setMobMod(uint16 type, int16 value)
@@ -862,7 +868,8 @@ void CMobEntity::DistributeRewards()
             });
             // clang-format on
 
-            if (m_giveExp && !PChar->StatusEffectContainer->HasStatusEffect(EFFECT_BATTLEFIELD))
+            //if (m_giveExp && !PChar->StatusEffectContainer->HasStatusEffect(EFFECT_BATTLEFIELD))
+            if (m_giveExp )
             {
                 charutils::DistributeExperiencePoints(PChar, this);
                 charutils::DistributeCapacityPoints(PChar, this);

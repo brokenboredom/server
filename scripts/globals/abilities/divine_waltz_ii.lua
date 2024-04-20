@@ -63,7 +63,7 @@ ability_object.onUseAbility = function(player, target, ability)
     end
 
     -- Apply waltz modifiers
-    cure = math.floor(cure * (1.0 + (player:getMod(xi.mod.WALTZ_POTENTCY)/100)))
+    cure = math.floor(cure * (1.0 + (player:getMod(xi.mod.WALTZ_POTENCY)/100)))
 
     -- Cap the final amount to max HP.
     if ((target:getMaxHP() - target:getHP()) < cure) then

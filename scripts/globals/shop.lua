@@ -39,12 +39,13 @@ xi.shop =
             priceMultiplier = (1 + (0.20 * (9 - player:getFameLevel(log)) / 8)) * xi.settings.SHOP_PRICE
         else
             log = -1
+            priceMultiplier = priceMultiplier * xi.settings.SHOP_PRICE
         end
 
         player:createShop(#stock / 2, log)
 
         for i = 1, #stock, 2 do
-            player:addShopItem(stock[i], stock[i+1] * priceMultiplier)
+            player:addShopItem(stock[i], utils.clamp(stock[i+1] * priceMultiplier, 1))
         end
 
         player:sendMenu(2)
@@ -79,7 +80,7 @@ xi.shop =
 
         for i = 1, #stock, 3 do
             if player:hasKeyItem(stock[i+2]) then
-                player:addShopItem(stock[i], stock[i+1])
+                player:addShopItem(stock[i], utils.clamp(stock[i+1] * xi.settings.SHOP_PRICE, 1))
             end
         end
 

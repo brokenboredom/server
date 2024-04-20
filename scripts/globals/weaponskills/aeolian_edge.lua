@@ -25,6 +25,7 @@ weaponskill_object.onUseWeaponSkill = function(player, target, wsID, tp, primary
     params.ele = xi.magic.ele.WIND
     params.skill = xi.skill.DAGGER
     params.includemab = true
+    params.wipeShadows = true
 
     if xi.settings.USE_ADOULIN_WEAPON_SKILL_CHANGES then
         params.ftp100 = 2 params.ftp200 = 3 params.ftp300 = 4.5 -- https://www.bg-wiki.com/bg/Aeolian_Edge

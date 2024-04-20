@@ -75,7 +75,7 @@ xi.mob.phOnDespawn = function(ph, phList, chance, cooldown, immediate)
                 -- on PH death, replace PH repop with NM repop
                 DisallowRespawn(phId, true)
                 DisallowRespawn(nmId, false)
-                UpdateNMSpawnPoint(nmId)
+                UpdateNMSpawnPoint(nmId) --grabs spawn point from sql
                 nm:setRespawnTime(immediate and 1 or GetMobRespawnTime(phId)) -- if immediate is true, spawn the nm immediately (1ms) else use placeholder's timer
 
                 nm:addListener("DESPAWN", "DESPAWN_" .. nmId, function(m)

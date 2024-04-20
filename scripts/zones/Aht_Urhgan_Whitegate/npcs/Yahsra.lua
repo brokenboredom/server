@@ -26,6 +26,7 @@ local items =
     [9]  = {itemid = xi.items.AMIR_KOLLUKS,       price = 15000},
     [10] = {itemid = xi.items.PAHLUWAN_QALANSUWA, price = 20000},
     [11] = {itemid = xi.items.YIGIT_SERAWEELS,    price = 20000},
+	[12] = {itemid = xi.items.ENYOS_MASK,		  price = 10000},
 }
 
 entity.onTrade = function(player, npc, trade)

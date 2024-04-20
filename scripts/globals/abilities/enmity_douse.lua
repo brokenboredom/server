@@ -20,6 +20,8 @@ ability_object.onUseAbility = function(player, target, ability)
             enmityShed = 1000
         end
     end ]]--
+    target:setCE(player, 0)
+    target:setVE(player, 1)
 end
 
 return ability_object

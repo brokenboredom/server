@@ -80,6 +80,7 @@ struct map_config_t
     uint32 ah_list_limit;      // Maximum open AH listings per player
 
     float       exp_rate;                    // множитель получаемого опыта
+    bool        exp_total_jobs;
     float       exp_loss_rate;               // same as exp rate but applies when player dies
     uint8       exp_party_gap_penalties;     // if 1 Party Gap Penalties will apply
     float       exp_retain;                  // percentage of normally lost experience to retain upon death
@@ -107,6 +108,7 @@ struct map_config_t
     bool        fishing_enable;              // Enable/disable fishing system.
     float       fishing_skill_multiplier;    // Used to multiply the chance of gaining a skill up when fishing.
     float       mob_tp_multiplier;           // Multiplies the amount of TP mobs gain on any effect that would grant TP
+    float       mob_level_correction;
     float       player_tp_multiplier;        // Multiplies the amount of TP players gain on any effect that would grant TP
     bool        mob_no_despawn;              // Toggle whether mobs roam home or despawn
     float       nm_hp_multiplier;            // Multiplier for max HP of NM.

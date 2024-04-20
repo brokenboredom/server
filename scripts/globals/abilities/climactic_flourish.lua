@@ -31,7 +31,7 @@ end
 ability_object.onUseAbility = function(player, target, ability)
     for move = xi.effect.FINISHING_MOVE_1, xi.effect.FINISHING_MOVE_5 do
         player:delStatusEffect(move)
-        player:addStatusEffect(xi.effect.CLIMACTIC_FLOURISH, 3, 0, 60, 0, player:getMerit(xi.merit.CLIMACTIC_FLOURISH_EFFECT))
+        player:addStatusEffect(xi.effect.CLIMACTIC_FLOURISH, (move - xi.effect.FINISHING_MOVE_1), 0, 60, 0, player:getMerit(xi.merit.CLIMACTIC_FLOURISH_EFFECT))
     end
 end
 

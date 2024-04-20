@@ -19,7 +19,7 @@ spell_object.onMobSpawn = function(mob)
     xi.trust.message(mob, xi.trust.message_offset.SPAWN)
 
     mob:addSimpleGambit(ai.t.TARGET, ai.c.MB_AVAILABLE, 0, ai.r.MA, ai.s.MB_ELEMENT, xi.magic.spellFamily.NONE)
-    mob:addSimpleGambit(ai.t.TARGET, ai.c.NOT_SC_AVAILABLE, 0, ai.r.MA, ai.s.HIGHEST, xi.magic.spellFamily.NONE, 45)
+    mob:addSimpleGambit(ai.t.TARGET, ai.c.NOT_SC_AVAILABLE, 0, ai.r.MA, ai.s.HIGHEST, xi.magic.spellFamily.NONE, 20)
 
     local trustLevel  = mob:getMainLvl()
     local power       = trustLevel / 5
@@ -37,7 +37,7 @@ spell_object.onMobSpawn = function(mob)
     mob:addMod(xi.mod.ACC, 1000)
 
     -- Shantotto II attack type is suposed to be "typeless physical, like requiescat WS."
-    mob:SetMobSkillAttack(1163)
+    --mob:SetMobSkillAttack(1163)
 
     -- TODO: Her regular attacks have a big range (distance from mob, not AoE)
 

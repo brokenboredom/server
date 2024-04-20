@@ -853,6 +853,33 @@ namespace charutils
 
         PChar->StatusEffectContainer->LoadStatusEffects();
 
+		//Latents for windurst nation zones
+        PChar->PLatentEffectContainer->AddLatentEffect(LATENT::ZONE, ZONEID::ZONE_WINDURST_WATERS, Mod::MOVE, 30);
+        PChar->PLatentEffectContainer->AddLatentEffect(LATENT::ZONE, ZONEID::ZONE_WINDURST_WALLS, Mod::MOVE, 30);
+        PChar->PLatentEffectContainer->AddLatentEffect(LATENT::ZONE, ZONEID::ZONE_WINDURST_WOODS, Mod::MOVE, 30);
+        PChar->PLatentEffectContainer->AddLatentEffect(LATENT::ZONE, ZONEID::ZONE_PORT_WINDURST, Mod::MOVE, 30);
+        PChar->PLatentEffectContainer->AddLatentEffect(LATENT::ZONE, ZONEID::ZONE_HEAVENS_TOWER, Mod::MOVE, 30);
+        //Latents for bastok nation zones
+        PChar->PLatentEffectContainer->AddLatentEffect(LATENT::ZONE, ZONEID::ZONE_PORT_BASTOK, Mod::MOVE, 30);
+        PChar->PLatentEffectContainer->AddLatentEffect(LATENT::ZONE, ZONEID::ZONE_BASTOK_MARKETS, Mod::MOVE, 30);
+        PChar->PLatentEffectContainer->AddLatentEffect(LATENT::ZONE, ZONEID::ZONE_BASTOK_MINES, Mod::MOVE, 30);
+        PChar->PLatentEffectContainer->AddLatentEffect(LATENT::ZONE, ZONEID::ZONE_METALWORKS, Mod::MOVE, 30);
+        //Latents for SANDORIA nation zones
+        PChar->PLatentEffectContainer->AddLatentEffect(LATENT::ZONE, ZONEID::ZONE_CHATEAU_DORAGUILLE, Mod::MOVE, 30);
+        PChar->PLatentEffectContainer->AddLatentEffect(LATENT::ZONE, ZONEID::ZONE_NORTHERN_SANDORIA, Mod::MOVE, 30);
+        PChar->PLatentEffectContainer->AddLatentEffect(LATENT::ZONE, ZONEID::ZONE_SOUTHERN_SANDORIA, Mod::MOVE, 30);
+        PChar->PLatentEffectContainer->AddLatentEffect(LATENT::ZONE, ZONEID::ZONE_PORT_SANDORIA, Mod::MOVE, 30);
+        //Latents for JEUNO nation zones
+        PChar->PLatentEffectContainer->AddLatentEffect(LATENT::ZONE, ZONEID::ZONE_RULUDE_GARDENS, Mod::MOVE, 30);
+        PChar->PLatentEffectContainer->AddLatentEffect(LATENT::ZONE, ZONEID::ZONE_UPPER_JEUNO, Mod::MOVE, 30);
+        PChar->PLatentEffectContainer->AddLatentEffect(LATENT::ZONE, ZONEID::ZONE_LOWER_JEUNO, Mod::MOVE, 30);
+        PChar->PLatentEffectContainer->AddLatentEffect(LATENT::ZONE, ZONEID::ZONE_PORT_JEUNO, Mod::MOVE, 30);
+        //Latents for TAVNAZIA nation zones
+        PChar->PLatentEffectContainer->AddLatentEffect(LATENT::ZONE, ZONEID::ZONE_TAVNAZIAN_SAFEHOLD, Mod::MOVE, 30);
+        //Latents for WEST AHT URHGAN nation zones
+        PChar->PLatentEffectContainer->AddLatentEffect(LATENT::ZONE, ZONEID::ZONE_AL_ZAHBI, Mod::MOVE, 30);
+        PChar->PLatentEffectContainer->AddLatentEffect(LATENT::ZONE, ZONEID::ZONE_AHT_URHGAN_WHITEGATE, Mod::MOVE, 30);
+
         charutils::LoadEquip(PChar);
         charutils::EmptyRecycleBin(PChar);
         PChar->health.hp = zoneutils::IsResidentialArea(PChar) ? PChar->GetMaxHP() : HP;
@@ -4118,11 +4145,18 @@ namespace charutils
             // Ref: https://www.bg-wiki.com/ffxi/Job_Points
             float capacityPoints = 0;
 
-            if (mobLevel > 99)
+            if (mobLevel >= 96)
             {
                 // Base Capacity Point formula derived from the table located at:
                 // https://ffxiclopedia.fandom.com/wiki/Job_Points#Capacity_Points
-                capacityPoints = 0.0089 * std::pow(levelDiff, 3) + 0.0533 * std::pow(levelDiff, 2) + 3.7439 * levelDiff + 89.7;
+                if (levelDiff <= -1)
+                {
+                        capacityPoints = (0.0089 * std::pow(levelDiff, 3) + -0.0533 * std::pow(levelDiff, 2) + 3.7439 * levelDiff + 89.7);
+                }
+                else
+                {
+                    capacityPoints = (0.0089 * std::pow(levelDiff, 3) + 0.0533 * std::pow(levelDiff, 2) + 3.7439 * levelDiff + 89.7);
+                }
 
                 if (PMember->capacityChain.chainTime > gettick() || PMember->capacityChain.chainTime == 0)
                 {
@@ -4162,7 +4196,7 @@ namespace charutils
         TracyZoneScoped;
 
         float rawBonus = 0;
-
+        
         // Mod::CAPACITY_BONUS is currently used for JP Gifts, and can easily be used elsewhere
         // This value is stored as uint, as a whole number percentage value
         rawBonus += PChar->getMod(Mod::CAPACITY_BONUS);
@@ -4192,7 +4226,14 @@ namespace charutils
                 rawBonus += 30;
             }
         }
-
+        if (PChar->StatusEffectContainer->GetStatusEffect(EFFECT_DEDICATION) && PChar->loc.zone->GetRegionID() != REGION_TYPE::ABYSSEA)
+        {
+            bool isCapacity = PChar->StatusEffectContainer->GetStatusEffect(EFFECT_DEDICATION)->GetSubID();
+            if (isCapacity)
+            {
+                rawBonus += PChar->StatusEffectContainer->GetStatusEffect(EFFECT_DEDICATION)->GetPower();
+            }
+        }
         capacityPoints *= 1.f + rawBonus / 100;
         return capacityPoints;
     }
@@ -4212,7 +4253,7 @@ namespace charutils
             return;
         }
 
-        capacityPoints = (uint32)(capacityPoints * map_config.exp_rate);
+        capacityPoints = (uint32)(capacityPoints * map_config.capacity_rate);
 
         // uint16 currentCapacity = PChar->PJobPoints->GetCapacityPoints();
 
@@ -4371,6 +4412,22 @@ namespace charutils
         if (!expFromRaise)
         {
             exp = (uint32)(exp * map_config.exp_rate);
+
+            if (map_config.exp_total_jobs)
+            {
+                //float  currentJobLevel = static_cast<float>(PChar->GetMLevel());
+                uint16 totalJobLevels = 0;
+                for (uint8 JobID = 0; JobID < MAX_JOBTYPE; JobID++)
+                {
+                    totalJobLevels += PChar->jobs.job[JobID];
+                }
+                //float logBonus = 0.0;
+                //logBonus       = log10(static_cast<float>(totalJobLevels) + 4.f); //Add 4 for new chars. Unlocked jobs start at 0 resulting in log(6)<1 base xp.
+                float bonus = 1.0f + (totalJobLevels * 0.0025f);
+                exp *= bonus;
+            }
+
+            
         }
         uint16 currentExp  = PChar->jobs.exp[PChar->GetMJob()];
         bool   onLimitMode = false;
@@ -4462,13 +4519,20 @@ namespace charutils
                 PChar->pushPacket(new CConquestPacket(PChar));
             }
 
+            // Should this user be awarded imperial standing..
+            if (PChar->StatusEffectContainer->HasStatusEffect(EFFECT_SIGIL) && (region >= REGION_TYPE::RONFAURE_FRONT && region <= REGION_TYPE::VALDEAUNIA_FRONT))
+            {
+                charutils::AddPoints(PChar, "allied_notes", (int32)(exp * 0.1f));
+                PChar->pushPacket(new CConquestPacket(PChar));
+            }
+
             // Cruor Drops in Abyssea zones.
             uint16 Pzone = PChar->getZone();
             if (zoneutils::GetCurrentRegion(Pzone) == REGION_TYPE::ABYSSEA)
             {
                 uint16 TextID = luautils::GetTextIDVariable(Pzone, "CRUOR_OBTAINED");
-                // uint32 Total  = charutils::GetPoints(PChar, "cruor");
-                // uint32 Cruor  = 0; // Need to work out how to do cruor chains, until then no cruor will drop unless this line is customized for non retail play.
+                uint32 Total  = charutils::GetPoints(PChar, "cruor");
+                uint32 Cruor  = exp * 0.05f; // Need to work out how to do cruor chains, until then no cruor will drop unless this line is customized for non retail play.
 
                 if (TextID == 0)
                 {
@@ -4476,11 +4540,11 @@ namespace charutils
                 }
 
                 // TODO: Implement this once formula for Cruor attainment is implemented
-                // if (Cruor >= 1)
-                // {
-                //     PChar->pushPacket(new CMessageSpecialPacket(PChar, TextID, Cruor, Total + Cruor, 0, 0));
-                //     charutils::AddPoints(PChar, "cruor", Cruor);
-                // }
+                if (Cruor >= 1)
+                {
+                    PChar->pushPacket(new CMessageSpecialPacket(PChar, TextID, Cruor, Total + Cruor, 0, 0));
+                    charutils::AddPoints(PChar, "cruor", Cruor);
+                }
             }
         }
 
@@ -5326,14 +5390,9 @@ namespace charutils
         {
             CStatusEffect* dedication = PChar->StatusEffectContainer->GetStatusEffect(EFFECT_DEDICATION);
             int16          percentage = dedication->GetPower();
-            int16          cap        = dedication->GetSubPower();
-            bonus += std::clamp<int32>((int32)((exp * percentage) / 100), 0, cap);
-            dedication->SetSubPower(cap -= bonus);
-
-            if (cap <= 0)
-            {
-                PChar->StatusEffectContainer->DelStatusEffect(EFFECT_DEDICATION);
-            }
+            
+            bonus += (int32)(exp * percentage) / 100;
+            
         }
 
         int16 rovBonus = 0;

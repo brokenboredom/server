@@ -193,6 +193,20 @@ xi.magian.trials =
 [3556] = { check = checks.checkTradeTrials, reqs = { itemId = set{ 3502 } } }, -- 95 -> 99 (Umbral Marrow x5)
 [3606] = { check = checks.checkTradeTrials, reqs = { itemId = set{ 3502 } } }, -- 99 -> 99 (Umbral Marrow x250)
 
+-- Terpsichore
+[1000]  = { check = checks.checkTrials, reqs = { killWithWs=false, wSkill = set{ xi.weaponskill.PYRRHIC_KLEOS }, mobSystem = set{ xi.eco.UNDEAD } } },    -- 75 -> 75 DMG+1
+[1001]  = { check = checks.checkTrials, reqs = { killWithWs=true, wSkill = set{ xi.weaponskill.PYRRHIC_KLEOS }, mobSystem = set{ xi.eco.AQUAN } } },       -- 75 -> 75 DMG+4
+[1824]  = { check = checks.checkTrials, reqs = { killWithWs=true, wSkill = set{ xi.weaponskill.PYRRHIC_KLEOS }, mobSystem = set{ xi.eco.BIRD } } },       -- 75 -> 75 DMG+7
+[1825]  = { check = checks.checkTrials, reqs = { killWithWs=true, wSkill = set{ xi.weaponskill.PYRRHIC_KLEOS }, mobSystem = set{ xi.eco.ARCANA } } },       -- 75 -> 80
+[2252]  = { check = checks.checkTrials, reqs = { killWithWs=true, wSkill = set{ xi.weaponskill.PYRRHIC_KLEOS }, mobSystem = set{ xi.eco.BEAST } } },       -- 80 -> 85
+[2663]  = { check = checks.checkTrials, reqs = { mobid = set{ 17101203 } } }, -- 85 -> 90
+[3096]  = { check = checks.checkTrials, reqs = { mobid = set{ 17088786 } } }, -- 90 -> 95
+[3559]  = { check = checks.checkTradeTrials, reqs = { itemId = set{ 3503 } } }, -- 95 -> 99 (Mulcibar's Scoria x5)
+[3609]  = { check = checks.checkTradeTrials, reqs = { itemId = set{ 3503 } } }, -- 99 -> 99 (Mulcibar's Scoria x150)
+
+-- Athame
+[13]    = { check = checks.checkTrials, reqs = { mobSystem = set{ xi.eco.AMORPH } } },    -- 75 Delay -15 -> 75 Delay -30
+
 -- Excalibur
 [1012] = { check = checks.checkTrials, reqs = { killWithWs=false, wSkill = set{ xi.weaponskill.KNIGHTS_OF_ROUND }, mobSystem = set{ xi.eco.AQUAN } } },    -- 75 -> 75 DMG+1
 [1013] = { check = checks.checkTrials, reqs = { killWithWs=true, wSkill = set{ xi.weaponskill.KNIGHTS_OF_ROUND }, mobSystem = set{ xi.eco.UNDEAD } } },    -- 75 DMG+1 -> 75 DMG+2

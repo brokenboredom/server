@@ -195,6 +195,7 @@ namespace battleutils
 
     uint16 doSoulEaterEffect(CCharEntity* m_PChar, uint32 damage);
     uint16 doConsumeManaEffect(CCharEntity* m_PChar, uint32 damage);
+    void   doSoulEnslavementEffect(CCharEntity* m_PChar, uint32 damage);
     int32  getOverWhelmDamageBonus(CCharEntity* m_PChar, CBattleEntity* PDefender, int32 damage);
     uint16 jumpAbility(CBattleEntity* PAttacker, CBattleEntity* PVictim, uint8 tier);
 
@@ -228,6 +229,7 @@ namespace battleutils
 
     // stores damage for afflatus misery if active
     void HandleAfflatusMiseryDamage(CBattleEntity* PDefender, int32 damage);
+    void HandleScarletDeliriumDamage(CBattleEntity* PDefender, int32 damage);
     // boosts accuracy when afflatus msiery is active
     void HandleAfflatusMiseryAccuracyBonus(CBattleEntity* PAttacker);
 

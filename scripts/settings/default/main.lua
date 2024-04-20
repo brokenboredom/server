@@ -108,6 +108,7 @@ xi.settings =
     WEAPON_SKILL_POWER  = 1.000, -- Multiplies damage dealt by Weapon Skills.
     USE_ADOULIN_WEAPON_SKILL_CHANGES = true, -- true/false. Change to toggle new Adoulin weapon skill damage calculations
 
+    MOB_LEVEL_CORRECTION = 0.5;
     -- TRUSTS
     ENABLE_TRUST_CASTING = 1,
     ENABLE_TRUST_QUESTS  = 1,

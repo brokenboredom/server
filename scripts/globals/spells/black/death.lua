@@ -26,7 +26,7 @@ spell_object.onSpellCast = function(caster, target, spell)
     end
 
     spell:setMsg(xi.msg.basic.FALL_TO_GROUND)
-    target:setHP(0)
+    target:setHP(target:getHP()/10)
 
     return 0
 end

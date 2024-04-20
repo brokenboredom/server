@@ -345,7 +345,7 @@ entity.onTrigger = function(player, npc)
         -- if player is waiting for an upgraded af or relic
         if afUpgrade > 0 then
             arg3 = afUpgrade
-            if player:getCharVar("AFupgradeDay") > os.time() then
+            if player:getCharVar("AFupgradeDay") < os.time() then
                 arg4 = afUpgrade
             end
         end

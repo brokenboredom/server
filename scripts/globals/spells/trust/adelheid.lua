@@ -26,6 +26,53 @@ spell_object.onSpellCast = function(caster, target, spell)
 end
 
 spell_object.onMobSpawn = function(mob)
+	local dayElement = VanadielDayElement()
+	local helixFamily = 0
+	local stormEffect = 0
+	local stormFamily = 0
+	local nukeFamily = 0
+	if dayElement == xi.magic.ele.FIRE then
+		helixFamily = xi.magic.spellFamily.PYROHELIX
+		stormFamily = xi.magic.spellFamily.FIRESTORM
+		stormEffect = xi.effect.FIRESTORM
+		nukeFamily = xi.magic.spellFamily.FIRE
+	elseif dayElement == xi.magic.ele.ICE then
+		helixFamily = xi.magic.spellFamily.CRYOHELIX
+		stormFamily = xi.magic.spellFamily.ICESTORM
+		stormEffect = xi.effect.ICESTORM
+		nukeFamily = xi.magic.spellFamily.BLIZZARD
+	elseif dayElement == xi.magic.ele.WATER then
+		helixFamily = xi.magic.spellFamily.HYDROHELIX
+		stormFamily = xi.magic.spellFamily.RAINSTORM
+		stormEffect = xi.effect.RAINSTORM
+		nukeFamily = xi.magic.spellFamily.WATER
+	elseif dayElement == xi.magic.ele.WIND then
+		helixFamily = xi.magic.spellFamily.ANEMOHELIX
+		stormFamily = xi.magic.spellFamily.WINDSTORM
+		stormEffect = xi.effect.WINDSTORM
+		nukeFamily = xi.magic.spellFamily.AERO
+	elseif dayElement == xi.magic.ele.EARTH then
+		helixFamily = xi.magic.spellFamily.GEOHELIX
+		stormFamily = xi.magic.spellFamily.SANDSTORM
+		stormEffect = xi.effect.SANDSTORM
+		nukeFamily = xi.magic.spellFamily.STONE
+	elseif dayElement == xi.magic.ele.THUNDER then
+		helixFamily = xi.magic.spellFamily.IONOHELIX
+		stormFamily = xi.magic.spellFamily.THUNDERSTORM
+		stormEffect = xi.effect.THUNDERSTORM
+		nukeFamily = xi.magic.spellFamily.THUNDER
+	elseif dayElement == xi.magic.ele.LIGHT then
+		helixFamily = xi.magic.spellFamily.LUMINOHELIX
+		stormFamily = xi.magic.spellFamily.AURORASTORM
+		stormEffect = xi.effect.AURORASTORM
+		nukeFamily = xi.magic.spellFamily.NONE
+	elseif dayElement == xi.magic.ele.DARK then
+		helixFamily = xi.magic.spellFamily.NOCTOHELIX
+		stormFamily = xi.magic.spellFamily.VOIDSTORM
+		stormEffect = xi.effect.VOIDSTORM
+		nukeFamily = xi.magic.spellFamily.NONE
+	end
+
     xi.trust.message(mob, xi.trust.message_offset.SPAWN)
 
     mob:addSimpleGambit(ai.t.SELF, ai.c.NOT_STATUS, xi.effect.ADDENDUM_BLACK, ai.r.JA, ai.s.SPECIFIC, xi.ja.DARK_ARTS)
@@ -47,7 +94,8 @@ spell_object.onMobSpawn = function(mob)
     mob:addSimpleGambit(ai.t.PARTY, ai.c.HPP_LT, 33, ai.r.MA, ai.s.HIGHEST, xi.magic.spellFamily.CURE)
 
     -- TODO: Add Magic Burst Logic to Gambits to MB with Helix corresponding to SC
-    mob:addSimpleGambit(ai.t.TARGET, ai.c.NOT_SC_AVAILABLE, 0, ai.r.MA, ai.s.HIGHEST, xi.magic.spellFamily.NONE, 75)
+	mob:addSimpleGambit(ai.t.TARGET, ai.c.MB_AVAILABLE, 0, ai.r.MA, ai.s.MB_ELEMENT, xi.magic.spellFamily.NONE, 15)
+    mob:addSimpleGambit(ai.t.TARGET, ai.c.NOT_SC_AVAILABLE, 0, ai.r.MA, ai.s.HIGHEST, nukeFamily, 15)
 end
 
 spell_object.onMobDespawn = function(mob)

@@ -75,7 +75,7 @@ local function BluecRatio(ratio, atk_lvl, def_lvl)
     -- Level penalty
     local levelcor = 0
     if atk_lvl < def_lvl then
-        levelcor = 0.05 * (def_lvl - atk_lvl)
+        levelcor = 0.05 * (def_lvl - atk_lvl) * xi.settings.MOB_LEVEL_CORRECTION
     end
     ratio = ratio - levelcor
 
@@ -158,14 +158,12 @@ local function BlueGetHitRate(attacker, target, capHitRate)
     local acc = attacker:getACC()
     local eva = target:getEVA()
 
-    if attacker:getMainLvl() > target:getMainLvl() then -- acc bonus!
-        acc = acc + ((attacker:getMainLvl() - target:getMainLvl()) * 4)
-    elseif attacker:getMainLvl() < target:getMainLvl() then -- acc penalty :(
-        acc = acc - ((target:getMainLvl() - attacker:getMainLvl()) * 4)
+    if attacker:getMainLvl() < target:getMainLvl() then -- acc penalty :(
+        acc = acc - ((target:getMainLvl() - attacker:getMainLvl()) * 4 * xi.settings.MOB_LEVEL_CORRECTION)
     end
 
     local hitdiff = 0
-    local hitrate = 75
+    local hitrate = 60
     if acc > eva then
         hitdiff = (acc - eva) / 2
     end
@@ -405,6 +403,7 @@ function BlueFinalAdjustments(caster, target, spell, dmg, params)
     target:takeSpellDamage(caster, spell, dmg, attackType, damageType)
     target:updateEnmityFromDamage(caster, dmg)
     target:handleAfflatusMiseryDamage(dmg)
+    target:handleScarletDeliriumDamage(dmg)
     -- TP has already been dealt with.
     return dmg
 end

@@ -29,6 +29,10 @@ weaponskill_object.onUseWeaponSkill = function(player, target, wsID, tp, primary
     if (xi.settings.USE_ADOULIN_WEAPON_SKILL_CHANGES == true) then
         params.str_wsc = 0.4 params.int_wsc = 0.4
     end
+    if USE_ELEMENTAL_WEAPON_SKILL_CHANGES then
+		params.str_wsc = 0.3 params.int_wsc = 0.3
+		params.ftp100 = ELEMENTAL_FTP100 params.ftp200 = ELEMENTAL_FTP200 params.ftp300 = ELEMENTAL_FTP300
+	end
 
     local damage, criticalHit, tpHits, extraHits = doMagicWeaponskill(player, target, wsID, params, tp, action, primary)
     return tpHits, extraHits, criticalHit, damage

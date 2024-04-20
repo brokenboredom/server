@@ -166,9 +166,9 @@ end
 local function calculateMagicHitRate(magicacc, magiceva, percentBonus, casterLvl, targetLvl)
     local p = 0
     --add a scaling bonus or penalty based on difference of targets level from caster
-    local levelDiff = utils.clamp(casterLvl - targetLvl, -5, 5)
+    local levelDiff = utils.clamp(casterLvl - targetLvl, -5, 5) * xi.settings.MOB_LEVEL_CORRECTION
 
-    p = 70 - 0.5 * (magiceva - magicacc) + levelDiff * 3 + percentBonus
+    p = 60 - 0.5 * (magiceva - magicacc) + levelDiff * 3 + percentBonus
 
     return utils.clamp(p, 5, 95)
 end
@@ -659,6 +659,7 @@ function handleAfflatusMisery(caster, spell, dmg)
     return dmg
 end
 
+
  function finalMagicAdjustments(caster, target, spell, dmg)
     --Handles target's HP adjustment and returns UNSIGNED dmg (absorb message is set in this function)
 
@@ -718,6 +719,7 @@ end
     else
         target:takeSpellDamage(caster, spell, dmg, xi.attackType.MAGICAL, xi.damageType.ELEMENTAL + spell:getElement())
         target:handleAfflatusMiseryDamage(dmg)
+        target:handleScarletDeliriumDamage(dmg)
         target:updateEnmityFromDamage(caster, dmg)
         -- Only add TP if the target is a mob
         if target:getObjType() ~= xi.objType.PC and dmg > 0 then

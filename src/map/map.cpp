@@ -1110,6 +1110,7 @@ int32 map_config_default()
     map_config.ah_max_fee                  = 10000;
     map_config.ah_list_limit               = 7;
     map_config.exp_rate                    = 1.0f;
+    map_config.exp_total_jobs              = 1;
     map_config.exp_loss_rate               = 1.0f;
     map_config.exp_retain                  = 0.0f;
     map_config.exp_loss_level              = 4;
@@ -1136,6 +1137,7 @@ int32 map_config_default()
     map_config.fishing_enable              = 0;
     map_config.fishing_skill_multiplier    = 1.0f;
     map_config.mob_tp_multiplier           = 1.0f;
+    map_config.mob_level_correction        = 1.0f;
     map_config.player_tp_multiplier        = 1.0f;
     map_config.nm_hp_multiplier            = 1.0f;
     map_config.mob_hp_multiplier           = 1.0f;
@@ -1320,6 +1322,10 @@ int32 map_config_read(const int8* cfgName)
         {
             map_config.exp_rate = (float)atof(w2);
         }
+        else if (strcmp(w1, "exp_total_jobs") == 0)
+        {
+            map_config.exp_total_jobs = (float)atof(w2);
+        }
         else if (strcmp(w1, "exp_loss_rate") == 0)
         {
             map_config.exp_loss_rate = (float)atof(w2);
@@ -1335,6 +1341,10 @@ int32 map_config_read(const int8* cfgName)
         else if (strcmp(w1, "mob_tp_multiplier") == 0)
         {
             map_config.mob_tp_multiplier = (float)atof(w2);
+        }
+        else if (strcmp(w1, "mob_level_correction") == 0)
+        {
+            map_config.mob_level_correction = (float)atof(w2);
         }
         else if (strcmp(w1, "player_tp_multiplier") == 0)
         {

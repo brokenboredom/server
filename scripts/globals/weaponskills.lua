@@ -78,14 +78,14 @@ local function souleaterBonus(attacker, wsParams)
             percent = percent / 2
         end
 
-        percent = percent + math.min(0.02, 0.01 * attacker:getMod(xi.mod.SOULEATER_EFFECT))
+        percent = percent + utils.clamp(0.01 * attacker:getMod(xi.mod.SOULEATER_EFFECT), 0.0, 0.02)
         local health = attacker:getHP()
 
         if health > 10 then
-            bonus = bonus + health * percent
+            bonus = health * percent
         end
-
-        attacker:delHP(wsParams.numHits * 0.10 * attacker:getHP())
+        --attacker:PrintToPlayer(string.format("HP: %s, hpPerHit: %s, numHits: %s", attacker:getHP(), bonus, wsParams.numHits))
+        attacker:delHP(bonus)
     end
 
     return bonus
@@ -150,8 +150,9 @@ end
 local function accVariesWithTP(hitrate, acc, tp, a1, a2, a3)
     -- sadly acc varies with tp ALL apply an acc PENALTY, the acc at various %s are given as a1 a2 a3
     local accpct = fTP(tp, a1, a2, a3)
-    local acclost = acc - (acc * accpct)
-    local hrate = hitrate - (0.005 * acclost)
+    --local acclost = acc - (acc * accpct)
+    --local hrate = hitrate - (0.005 * acclost)
+    local hrate = hitrate * accpct
 
     -- cap it
     if hrate > 0.95 then
@@ -221,7 +222,7 @@ local function cRangedRatio(attacker, defender, params, ignoredDef, tp)
 
     local levelCorrection = 0
     if attacker:getMainLvl() < defender:getMainLvl() then
-        levelCorrection = 0.025 * (defender:getMainLvl() - attacker:getMainLvl())
+        levelCorrection = 0.025 * (defender:getMainLvl() - attacker:getMainLvl()) * xi.settings.MOB_LEVEL_CORRECTION
     end
 
     cratio = cratio - levelCorrection
@@ -290,14 +291,12 @@ local function getRangedHitRate(attacker, target, capHitRate, bonus)
 
     acc = acc + bonus
 
-    if attacker:getMainLvl() > target:getMainLvl() then -- acc bonus!
-        acc = acc + ((attacker:getMainLvl() - target:getMainLvl()) * 4)
-    elseif attacker:getMainLvl() < target:getMainLvl() then -- acc penalty :(
-        acc = acc - ((target:getMainLvl() - attacker:getMainLvl()) * 4)
+    if attacker:getMainLvl() < target:getMainLvl() then -- acc penalty :(
+        acc = acc - ((target:getMainLvl() - attacker:getMainLvl()) * 4 * xi.settings.MOB_LEVEL_CORRECTION)
     end
 
     local hitdiff = 0
-    local hitrate = 75
+    local hitrate = 60
 
     if acc > eva then
         hitdiff = (acc - eva) / 2
@@ -481,6 +480,16 @@ function calculateRawWSDmg(attacker, target, wsID, tp, action, wsParams, calcPar
             critrate = critrate + (10 + calcParams.flourishEffect:getSubPower()/2)/100
         end
 
+        if calcParams.climacticEffect then
+            critrate = 100
+            local power = climacticEffect:getPower()
+            if power >= 1 then
+                climacticEffect:setPower(climacticEffect:getPower() - 1)
+            else
+                attacker:delStatusEffect(xi.effect.CLIMACTIC_FLOURISH)
+            end
+        end
+
         -- Add on native crit hit rate (guesstimated, it actually follows an exponential curve)
         nativecrit = (attacker:getStat(xi.mod.DEX) - target:getStat(xi.mod.AGI)) * 0.005 -- assumes +0.5% crit rate per 1 dDEX
         nativecrit = utils.clamp(nativecrit, 0.05, 0.2) -- caps only apply to base rate, not merits and mods
@@ -506,7 +515,14 @@ function calculateRawWSDmg(attacker, target, wsID, tp, action, wsParams, calcPar
     calcParams.shadowsAbsorbed = 0
 
     -- Calculate the damage from the first hit
+    --Consume Mana added dmg
+	if attacker:hasStatusEffect(xi.effect.CONSUME_MANA) then
+		mainBase = mainBase+  math.floor(attacker:getMP()/10)
+		attacker:delStatusEffectSilent(xi.effect.CONSUME_MANA)
+		attacker:setMP(0)
+	end
     local dmg = mainBase * ftp
+
     hitdmg, calcParams = getSingleHitDamage(attacker, target, dmg, wsParams, calcParams)
 
     if calcParams.melee then
@@ -648,6 +664,7 @@ function doPhysicalWeaponskill(attacker, target, wsID, wsParams, tp, action, pri
     calcParams.extraOffhandHit = attacker:isDualWielding() or attack.weaponType == xi.skill.HAND_TO_HAND
     calcParams.hybridHit = wsParams.hybridWS
     calcParams.flourishEffect = attacker:getStatusEffect(xi.effect.BUILDING_FLOURISH)
+    calcParams.climacticEffect = attacker:getStatusEffect(xi.effect.CLIMACTIC_FLOURISH)
     calcParams.fencerBonus = fencerBonus(attacker)
     calcParams.bonusTP = wsParams.bonusTP or 0
     calcParams.bonusfTP = gorgetBeltFTP or 0
@@ -760,16 +777,15 @@ function doMagicWeaponskill(attacker, target, wsID, wsParams, tp, action, primar
         ['bonusTP']         = wsParams.bonusTP or 0,
         ['wsID']            = wsID
     }
-
+    
     local bonusfTP, bonusacc = handleWSGorgetBelt(attacker)
     bonusacc = bonusacc + attacker:getMod(xi.mod.WSACC)
 
-    local fint = utils.clamp(8 + (attacker:getStat(xi.mod.INT) - target:getStat(xi.mod.INT)), -32, 32)
+    local fint = 8 + (attacker:getStat(xi.mod.INT) - target:getStat(xi.mod.INT)/2)
     local dmg = 0
 
     -- Magic-based WSes never miss, so we don't need to worry about calculating a miss, only if a shadow absorbed it.
-    if not shadowAbsorb(target) then
-
+    if wsParams.wipeShadows == true then
         -- Begin Checks for bonus wsc bonuses. See the following for details:
         -- https://www.bg-wiki.com/bg/Utu_Grip
         -- https://www.bluegartr.com/threads/108199-Random-Facts-Thread-Other?p=6826618&viewfull=1#post6826618
@@ -781,9 +797,9 @@ function doMagicWeaponskill(attacker, target, wsID, wsParams, tp, action, primar
         end
 
         dmg = attacker:getMainLvl() + 2 + (attacker:getStat(xi.mod.STR) * wsParams.str_wsc + attacker:getStat(xi.mod.DEX) * wsParams.dex_wsc +
-             attacker:getStat(xi.mod.VIT) * wsParams.vit_wsc + attacker:getStat(xi.mod.AGI) * wsParams.agi_wsc +
-             attacker:getStat(xi.mod.INT) * wsParams.int_wsc + attacker:getStat(xi.mod.MND) * wsParams.mnd_wsc +
-             attacker:getStat(xi.mod.CHR) * wsParams.chr_wsc) + fint
+                attacker:getStat(xi.mod.VIT) * wsParams.vit_wsc + attacker:getStat(xi.mod.AGI) * wsParams.agi_wsc +
+                attacker:getStat(xi.mod.INT) * wsParams.int_wsc + attacker:getStat(xi.mod.MND) * wsParams.mnd_wsc +
+                attacker:getStat(xi.mod.CHR) * wsParams.chr_wsc) + fint
 
         -- Applying fTP multiplier
         local ftp = fTP(tp, wsParams.ftp100, wsParams.ftp200, wsParams.ftp300) + bonusfTP
@@ -824,7 +840,64 @@ function doMagicWeaponskill(attacker, target, wsID, wsParams, tp, action, primar
 
         dmg = dmg * xi.settings.WEAPON_SKILL_POWER -- Add server bonus
     else
-        calcParams.shadowsAbsorbed = 1
+        if not shadowAbsorb(target) then
+
+            -- Begin Checks for bonus wsc bonuses. See the following for details:
+            -- https://www.bg-wiki.com/bg/Utu_Grip
+            -- https://www.bluegartr.com/threads/108199-Random-Facts-Thread-Other?p=6826618&viewfull=1#post6826618
+
+            for modId, parameterName in pairs(modParameters) do
+                if attacker:getMod(modId) > 0 then
+                    wsParams[parameterName] = wsParams[parameterName] + (attacker:getMod(modId) / 100)
+                end
+            end
+
+            dmg = attacker:getMainLvl() + 2 + (attacker:getStat(xi.mod.STR) * wsParams.str_wsc + attacker:getStat(xi.mod.DEX) * wsParams.dex_wsc +
+                 attacker:getStat(xi.mod.VIT) * wsParams.vit_wsc + attacker:getStat(xi.mod.AGI) * wsParams.agi_wsc +
+                 attacker:getStat(xi.mod.INT) * wsParams.int_wsc + attacker:getStat(xi.mod.MND) * wsParams.mnd_wsc +
+                 attacker:getStat(xi.mod.CHR) * wsParams.chr_wsc) + fint
+
+            -- Applying fTP multiplier
+            local ftp = fTP(tp, wsParams.ftp100, wsParams.ftp200, wsParams.ftp300) + bonusfTP
+
+            dmg = dmg * ftp
+
+            -- Factor in "all hits" bonus damage mods
+            local bonusdmg = attacker:getMod(xi.mod.ALL_WSDMG_ALL_HITS) -- For any WS
+            if attacker:getMod(xi.mod.WEAPONSKILL_DAMAGE_BASE + wsID) > 0 and not attacker:isPet() then -- For specific WS
+                bonusdmg = bonusdmg + attacker:getMod(xi.mod.WEAPONSKILL_DAMAGE_BASE + wsID)
+            end
+
+            -- Add in bonusdmg
+            dmg = dmg * ((100 + bonusdmg) / 100) -- Apply our "all hits" WS dmg bonuses
+            dmg = dmg + ((dmg * attacker:getMod(xi.mod.ALL_WSDMG_FIRST_HIT)) / 100) -- Add in our "first hit" WS dmg bonus
+
+            -- Calculate magical bonuses and reductions
+            dmg = addBonusesAbility(attacker, wsParams.ele, target, dmg, wsParams)
+            dmg = dmg * applyResistanceAbility(attacker, target, wsParams.ele, wsParams.skill, bonusacc)
+            dmg = target:magicDmgTaken(dmg, wsParams.ele)
+
+            if dmg < 0 then
+                calcParams.finalDmg = dmg
+
+                dmg = takeWeaponskillDamage(target, attacker, wsParams, primaryMsg, attack, calcParams, action)
+                return dmg
+            end
+
+            dmg = adjustForTarget(target, dmg, wsParams.ele)
+
+            if dmg > 0 then
+                dmg = dmg - target:getMod(xi.mod.PHALANX)
+                dmg = utils.clamp(dmg, 0, 99999)
+            end
+
+            dmg = utils.oneforall(target, dmg)
+            dmg = utils.stoneskin(target, dmg)
+
+            dmg = dmg * xi.settings.WEAPON_SKILL_POWER -- Add server bonus
+        else
+            calcParams.shadowsAbsorbed = 1
+        end
     end
 
     calcParams.finalDmg = dmg
@@ -948,14 +1021,12 @@ function getHitRate(attacker, target, capHitRate, bonus)
 
     acc = acc + bonus
 
-    if attacker:getMainLvl() > target:getMainLvl() then              -- Accuracy Bonus
-        acc = acc + ((attacker:getMainLvl()-target:getMainLvl())*4)
-    elseif (attacker:getMainLvl() < target:getMainLvl()) then        -- Accuracy Penalty
-        acc = acc - ((target:getMainLvl()-attacker:getMainLvl())*4)
+    if (attacker:getMainLvl() < target:getMainLvl()) then        -- Accuracy Penalty
+        acc = acc - ((target:getMainLvl()-attacker:getMainLvl())*4*xi.settings.MOB_LEVEL_CORRECTION)
     end
 
     local hitdiff = 0
-    local hitrate = 75
+    local hitrate = 60
 
     if acc > eva then
         hitdiff = (acc - eva) / 2
@@ -1026,7 +1097,7 @@ function cMeleeRatio(attacker, defender, params, ignoredDef, tp)
     local levelCorrection = 0
 
     if attacker:getMainLvl() < defender:getMainLvl() then
-        levelCorrection = 0.05 * (defender:getMainLvl() - attacker:getMainLvl())
+        levelCorrection = 0.05 * (defender:getMainLvl() - attacker:getMainLvl()) * xi.settings.MOB_LEVEL_CORRECTION
     end
 
     cratio = cratio - levelCorrection

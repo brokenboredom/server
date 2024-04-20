@@ -230,7 +230,8 @@ entity.onTrigger = function(player, npc)
     local relicId = hasRelic(player, false)
     local currentRelic = player:getCharVar("RELIC_IN_PROGRESS")
     local relicWait = player:getCharVar("RELIC_DUE_AT")
-    local relicConquest = player:getCharVar("RELIC_CONQUEST_WAIT")
+    --local relicConquest = player:getCharVar("RELIC_CONQUEST_WAIT")
+    local relicConquest = 0
 
     if currentRelic ~= 0 and relicWait ~= 0 and relics[currentRelic][stageNumber] ~= 4 then
         local relic = relics[currentRelic]

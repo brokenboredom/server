@@ -9,6 +9,7 @@ require("scripts/globals/status")
 require("scripts/globals/magic")
 require("scripts/globals/utils")
 require("scripts/globals/msg")
+require("scripts/settings/main")
 -----------------------------------
 xi = xi or {}
 xi.mobskills = xi.mobskills or {}
@@ -181,16 +182,16 @@ xi.mobskills.mobPhysicalMove = function(mob, target, skill, numberofhits, accmod
         lvldiff = 0
     end
 
-    ratio = ratio + lvldiff * 0.05
+    ratio = ratio + lvldiff * 0.05 * xi.settings.MOB_LEVEL_CORRECTION
     ratio = utils.clamp(ratio, 0, 4)
 
     --work out hit rate for mobs
-    local hitrate = ( (acc * accmod) - eva) / 2 + (lvldiff * 2) + 75
+    local hitrate = ( (acc * accmod) - eva) / 2 + (lvldiff * 2 * xi.settings.MOB_LEVEL_CORRECTION) + 75
 
     hitrate = utils.clamp(hitrate, 20, 95)
 
     --work out the base damage for a single hit
-    local hitdamage = base + lvldiff
+    local hitdamage = base + lvldiff * xi.settings.MOB_LEVEL_CORRECTION
     if hitdamage < 1 then
         hitdamage = 1
     end
@@ -625,6 +626,7 @@ xi.mobskills.mobFinalAdjustments = function(dmg, mob, skill, target, attackType,
     if dmg > 0 then
         target:updateEnmityFromDamage(mob, dmg)
         target:handleAfflatusMiseryDamage(dmg)
+        target:handleScarletDeliriumDamage(dmg)
     end
 
     return dmg

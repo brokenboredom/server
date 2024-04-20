@@ -17,7 +17,7 @@ end
 ability_object.onUseAbility = function(player, target, ability)
     target:delStatusEffect(xi.effect.INNIN)
     target:delStatusEffect(xi.effect.YONIN)
-    target:addStatusEffect(xi.effect.YONIN, 30, 15, 300, 0, 20)
+    target:addStatusEffect(xi.effect.YONIN, 30, 15, 3600, 0, 20)
 end
 
 return ability_object

@@ -40,7 +40,7 @@ struct EnmityObject_t
 
 typedef std::unordered_map<uint32, EnmityObject_t> EnmityList_t;
 
-constexpr int32 EnmityCap = 30000;
+constexpr int32 EnmityCap = 2000000;
 
 class CEnmityContainer
 {

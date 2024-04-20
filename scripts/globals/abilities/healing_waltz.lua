@@ -36,6 +36,9 @@ ability_object.onAbilityCheck = function(player, target, ability)
                 ability:setRecast(ability:getRecast() * ((fanDanceMerits -5)/100))
             end
         end
+        if (player:hasStatusEffect(xi.effect.CONTRADANCE)) then
+            setAoe(1)
+        end
         return 0, 0
     end
 end
